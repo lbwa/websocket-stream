@@ -1,0 +1,13 @@
+{
+  "name": "websocket-with-stream",
+  "version": "0.0.1",
+  "description": "WebSocket with stream",
+  "main": "index.js",
+  "repository": "git@github.com:lbwa/websocket-with-stream.git",
+  "author": "Bowen <devto@outlook.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "typescript": "^3.7.2"
+  }
+}
