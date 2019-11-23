@@ -1,38 +1,23 @@
 import http from 'http'
 import WebSocket from 'ws'
+import fs from 'fs'
+import path from 'path'
 
 import { DEFAULT_PORT } from './shared/env'
 
 const PORT = DEFAULT_PORT || process.env.PORT
 const server = http.createServer((req, res) => {
-  res.end(`
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>WebSocket</title>
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-      }
-      #root {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root">Seems nothing could be found.</div>
-  </body>
-</html>
-  `)
+  const htmlStream = fs.createReadStream(
+    path.resolve(process.cwd(), 'src/public/index.html')
+  )
+
+  res.writeHead(200, {
+    'Content-Type': 'text/html'
+  })
+  htmlStream.pipe(res)
+  htmlStream.on('end', () => {
+    res.end()
+  })
 })
 const wss = new WebSocket.Server({ server })
 
