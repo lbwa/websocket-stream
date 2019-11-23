@@ -1,5 +1,6 @@
 import WebSocket from 'ws'
 import http from 'http'
+import { randomBytes } from 'crypto'
 
 interface RequestAction {
   action: number
@@ -45,10 +46,9 @@ function router(ws: WebSocket, request: RequestAction) {
       })
 
     case 1:
-      return send({
-        type: 0,
-        data: 1
-      })
+      // https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
+      ws.send(randomBytes(1024))
+      return
 
     default:
       return send({
