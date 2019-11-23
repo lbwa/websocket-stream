@@ -2,6 +2,7 @@ import WebSocket = require('ws')
 import { randomBytes } from 'crypto'
 import fs from 'fs'
 import path from 'path'
+import glob from 'globby'
 
 import { RequestAction } from '.'
 
@@ -48,10 +49,45 @@ export function router(ws: WebSocket, request: RequestAction) {
       })
       return
 
+    case 3:
+      responseYCbCrFrame(ws, '**/*.yuv', {
+        ignore: ['**/node_modules/**/*']
+      })
+      return
+
     default:
       return send({
         type: 1,
         data: 'Bad request'
       })
+  }
+}
+
+async function responseYCbCrFrame(
+  ws: WebSocket,
+  patterns: string | Readonly<string[]>,
+  options?: glob.GlobbyOptions
+) {
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of
+  // https://github.com/sindresorhus/globby#globbystreampatterns-options
+  for await (const filePath of glob.stream(patterns, options)) {
+    await new Promise((resolve, reject) => {
+      const rs = fs.createReadStream(
+        path.resolve(process.cwd(), filePath as string)
+      )
+      rs.on('data', chunk => {
+        ws.send(chunk)
+      })
+      rs.on('end', () => {
+        ws.send(
+          JSON.stringify({
+            type: 0,
+            data: 'done',
+            path: filePath
+          })
+        )
+        resolve()
+      })
+    })
   }
 }
