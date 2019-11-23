@@ -1,24 +1,10 @@
-import http from 'http'
 import WebSocket from 'ws'
-import fs from 'fs'
-import path from 'path'
+import http from 'http'
 
 import { DEFAULT_PORT } from './shared/env'
+import { server } from './basic-server'
 
 const PORT = DEFAULT_PORT || process.env.PORT
-const server = http.createServer((req, res) => {
-  const htmlStream = fs.createReadStream(
-    path.resolve(process.cwd(), 'src/public/index.html')
-  )
-
-  res.writeHead(200, {
-    'Content-Type': 'text/html'
-  })
-  htmlStream.pipe(res)
-  htmlStream.on('end', () => {
-    res.end()
-  })
-})
 const wss = new WebSocket.Server({ server })
 
 wss.on('connection', function connection(
@@ -27,7 +13,8 @@ wss.on('connection', function connection(
   client: Set<WebSocket>
 ) {
   // Receive messages from clients
-  wss.on('message', function incoming(data: any) {
+  ws.on('message', function incoming(data: any) {
+    // WebSocket broadcast
     wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         // to do create a stream response

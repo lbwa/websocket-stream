@@ -22,5 +22,11 @@
   </head>
   <body>
     <div id="root">Seems nothing could be found.</div>
+    <script>
+      const ws = new WebSocket('ws://localhost:8000')
+      ws.addEventListener('open', () => {
+        ws.send(JSON.stringify({ action: 'connected' }))
+      })
+    </script>
   </body>
 </html>
