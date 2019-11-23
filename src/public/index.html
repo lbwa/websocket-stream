@@ -25,7 +25,7 @@
     <script>
       const ws = new WebSocket('ws://localhost:8000')
       ws.addEventListener('open', () => {
-        ws.send(JSON.stringify({ action: 'connected' }))
+        ws.send(JSON.stringify({ action: 0 }))
       })
     </script>
   </body>
