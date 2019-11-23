@@ -1,5 +1,5 @@
 {
-  "name": "websocket-with-stream",
+  "name": "websocket-stream",
   "version": "0.0.1",
   "description": "WebSocket with stream",
   "main": "index.js",
