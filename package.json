@@ -8,10 +8,25 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "concurrently": "^5.0.0",
+    "nodemon": "^2.0.1",
     "typescript": "^3.7.2",
     "ws": "^7.2.0"
   },
   "devDependencies": {
     "@types/ws": "^6.0.3"
+  },
+  "scripts": {
+    "start": "npm run watch-debug",
+    "serve-debug": "nodemon --inspect dist",
+    "watch-ts": "tsc -w",
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "printWidth": 80,
+    "singleQuote": true,
+    "trailingComma": "none"
   }
 }
